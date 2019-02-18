@@ -247,18 +247,36 @@ var Serializer = function() {
     */
   this.toXmlCreateUpdate = function(options) {
     var xml = "";
+    var atts = [];
     if (options.Attributes) {
-      var atts = options.Attributes.map(function(c) {
+      atts = options.Attributes.map(function(c) {
         return (
           "<b:KeyValuePairOfstringanyType><c:key>" +
           c.key +
-          '</c:key><c:value  i:type="d:string" xmlns:d="http://www.w3.org/2001/XMLSchema">' +
+          '</c:key><c:value i:type="d:string" xmlns:d="http://www.w3.org/2001/XMLSchema">' +
           c.value +
           "</c:value></b:KeyValuePairOfstringanyType>"
         );
-      });
-      xml += "<b:Attributes>" + atts.join("") + "</b:Attributes>";
+      });      
     }
+
+    if (options.RelatedEntities) {      
+      attsRelated = options.RelatedEntities.map(function(c) {
+        return (
+          '<b:KeyValuePairOfstringanyType>' +
+            '<c:key>' + c.key + '</c:key>' +
+            '<c:value i:type="b:EntityReference">' +              
+              '<b:Id>' + c.Id + '</b:Id>' +
+              '<b:LogicalName>' + c.LogicalName + '</b:LogicalName>' +
+              '<b:Name i:nil="true"/>' +
+            '</c:value>' +
+          '</b:KeyValuePairOfstringanyType>'
+        );
+      });       
+      atts.push(attsRelated);      
+    }
+    xml += "<b:Attributes>" + atts.join("") + "</b:Attributes>";
+
     if (options.id) {
       xml += "<b:Id>" + options.id + "</b:Id>";
     }
