@@ -104,6 +104,7 @@ var Util = function (settings) {
         parseResponse,
         authenticate,
         executePost,
+        parseEntities,
 
         //load templates once
         microsoftOnlineSaml  = `
@@ -504,7 +505,7 @@ var Util = function (settings) {
                     }
                     const entity = data.Envelope.Body.RetrieveMultipleResponse.RetrieveMultipleResult
                     .Entities.Entity;
-                    
+
                     const dataArrJson = parseEntities(entity);
                     cb(null, dataArrJson);
                 }
