@@ -529,7 +529,7 @@ var Util = function (settings) {
                 text: f.value.Name,
               };
             } else if (f.value.$.type === 'a:AliasedValue') {
-              item[f.key] = f.value.Value._;
+              item[f.key.replace('.','_')] = f.value.Value._;
     
             } else {
               item[f.key] = f.value._;
