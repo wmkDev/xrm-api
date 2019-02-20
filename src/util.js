@@ -497,23 +497,19 @@ var Util = function (settings) {
                 });
                 //removes 'xx:' prefixes
                 data = deepObjCopy(data_no_ns, prefixes);
-                
-                if (settings.parseJson) {
-
-                    if (data.Envelope.Body.Fault) {
-                        throw result.Envelope.Body.Fault;
-                    }
-                    const entity = data.Envelope.Body.RetrieveMultipleResponse.RetrieveMultipleResult
-                    .Entities.Entity;
-
-                    const dataArrJson = parseEntities(entity);
-                    cb(null, dataArrJson);
-                }
-                else {
-                    cb(null, data);
-                }
+                cb(null, data);               
             });
+        else if (settings.parseJson) {
 
+                if (data.Envelope.Body.Fault) {
+                    throw result.Envelope.Body.Fault;
+                }
+                const entity = data.Envelope.Body.RetrieveMultipleResponse.RetrieveMultipleResult
+                .Entities.Entity;
+
+                const dataArrJson = parseEntities(entity);
+                cb(null, dataArrJson);
+        }
         else cb(null, data);
     };
 
@@ -537,7 +533,7 @@ var Util = function (settings) {
                 text: f.value.Name,
               };
             } else if (f.value.$.type === 'a:AliasedValue') {
-              item[f.key] = f.value.Value;
+              item[f.key] = f.value.Value._;
     
             } else {
               item[f.key] = f.value._;
