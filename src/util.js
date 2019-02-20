@@ -65,7 +65,7 @@ var Util = function (settings) {
 	
     // Sets default arguments values
     settings.timeout = settings.timeout || 15 * 60 * 1000;  // default sessions timeout of 15 minutes in ms
-    settings.returnJson = false;
+    settings.returnJson = true;
     settings.parseJson = true;
     settings.port = settings.port || (settings.useHttp ? 80 : 443);
 
@@ -498,19 +498,19 @@ var Util = function (settings) {
                 });
                 //removes 'xx:' prefixes
                 data = deepObjCopy(data_no_ns, prefixes);
-                cb(null, data);               
-            });
-        else if (settings.parseJson) {
+                if (settings.parseJson) {
 
-                if (data.Envelope.Body.Fault) {
-                    throw result.Envelope.Body.Fault;
+                    if (data.Envelope.Body.Fault) {
+                        throw result.Envelope.Body.Fault;
+                    }
+                    const entity = data.Envelope.Body.RetrieveMultipleResponse.RetrieveMultipleResult
+                    .Entities.Entity;
+    
+                    const dataArrJson = parseEntities(entity);
+                    cb(null, dataArrJson);
                 }
-                const entity = data.Envelope.Body.RetrieveMultipleResponse.RetrieveMultipleResult
-                .Entities.Entity;
-
-                const dataArrJson = parseEntities(entity);
-                cb(null, dataArrJson);
-        }
+                else cb(null, data);               
+            });       
         else cb(null, data);
     };
 
