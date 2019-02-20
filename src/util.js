@@ -498,7 +498,14 @@ var Util = function (settings) {
                 data = deepObjCopy(data_no_ns, prefixes);
                 
                 if (settings.parseJson) {
-                    const dataArrJson = parseEntities(data);
+
+                    if (data.Envelope.Body.Fault) {
+                        throw result.Envelope.Body.Fault;
+                    }
+                    const entity = data.Envelope.Body.RetrieveMultipleResponse.RetrieveMultipleResult
+                    .Entities.Entity;
+                    
+                    const dataArrJson = parseEntities(entity);
                     cb(null, dataArrJson);
                 }
                 else {
