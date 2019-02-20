@@ -65,7 +65,8 @@ var Util = function (settings) {
 	
     // Sets default arguments values
     settings.timeout = settings.timeout || 15 * 60 * 1000;  // default sessions timeout of 15 minutes in ms
-    settings.returnJson = true;
+    settings.returnJson = false;
+    settings.parseJson = true;
     settings.port = settings.port || (settings.useHttp ? 80 : 443);
 
     settings.hostName = settings.hostName || (function() {
