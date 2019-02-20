@@ -496,11 +496,49 @@ var Util = function (settings) {
                 });
                 //removes 'xx:' prefixes
                 data = deepObjCopy(data_no_ns, prefixes);
-                cb(null, data);
+                
+                if (settings.parseJson) {
+                    const dataArrJson = parseEntities(data);
+                    cb(null, dataArrJson);
+                }
+                else {
+                    cb(null, data);
+                }
             });
 
         else cb(null, data);
     };
+
+    parseEntities = function(entities) {
+        if (!entities || entities.length === 0) {
+          return [];
+        }
+    
+        const items = entities instanceof Array ? entities : [entities];
+        const result = [];
+        items.forEach(e => {
+          const item = {};
+          e.Attributes.KeyValuePairOfstringanyType.forEach((f, i) => {
+            if (f.value.$.type === 'a:OptionSetValue') {
+              item[f.key] = {
+                value: f.value.Value,
+              };
+            } else if (f.value.$.type === 'a:EntityReference') {
+              item[f.key] = {
+                value: f.value.Id,
+                text: f.value.Name,
+              };
+            } else if (f.value.$.type === 'a:AliasedValue') {
+              item[f.key] = f.value.Value;
+    
+            } else {
+              item[f.key] = f.value._;
+            }
+          });
+          result.push(item);
+        });
+        return result;
+      }
 
     executeSoapPost = function (options, action, template, body, cb) {
         var timeCreated = new Date(),

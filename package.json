@@ -1,6 +1,6 @@
 {
   "name": "dyn-xrm-api",
-  "version": "3.0.20",
+  "version": "3.0.21",
   "description": "Module that allows to invoke Microsoft Dynamics CRM services",
   "author": "Kidozen <development@kidozen.com>",
   "contributors": [

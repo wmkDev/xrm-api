@@ -119,12 +119,12 @@ var Serializer = function() {
         });
   
         var columSetXml =
-          "<b:ColumnSet>" +
-          "<b:AllColumns>false</b:AllColumns>" +
-          '<b:Columns xmlns:c="http://schemas.microsoft.com/2003/10/Serialization/Arrays">' +
-          columset.join("") +
-          "</b:Columns>" +
-          "</b:ColumnSet>";
+          "<b:Columns>" +
+            "<b:AllColumns>false</b:AllColumns>" +
+            '<b:Columns xmlns:c="http://schemas.microsoft.com/2003/10/Serialization/Arrays">' +
+              columset.join("") +
+            "</b:Columns>" +
+          "</b:Columns>";
 
         return `\n<b:LinkEntity>
                      <b:LinkFromAttributeName>${
