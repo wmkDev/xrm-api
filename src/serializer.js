@@ -127,6 +127,7 @@ var Serializer = function() {
           "</b:Columns>";
 
         return `\n<b:LinkEntity>
+                    ${columSetXml}       
                      <b:LinkFromAttributeName>${
                        linked.LinkFromAttributeName
                      }</b:LinkFromAttributeName>
@@ -140,8 +141,7 @@ var Serializer = function() {
                        linked.LinkToEntityName
                      }</b:LinkToEntityName>                             
                      <b:EntityAlias>${linked.EntityAlias}</b:EntityAlias>
-                     <b:JoinOperator>${linked.JoinOperator}</b:JoinOperator>
-                     ${columSetXml}                   
+                     <b:JoinOperator>${linked.JoinOperator}</b:JoinOperator>                               
                      ${linkCriteriaXml}
                    </b:LinkEntity>`;
       });
