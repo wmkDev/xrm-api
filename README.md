@@ -15,15 +15,17 @@ This fork was made for personal use to add missing features (customized) and mad
 
 Main differences from original module (xrm-api):
 
-* Added Criteria for RetrieveMultiple;
-* Added Sort for RetrieveMultiple;
-* Added LinkEntities for RetrieveMultiple;
+* Fixed param "RelatedEntities" on Create and Update (fk assignment value).
 * New method: ExecuteSetState, used to change state of entity and trigger events on CRM (EntityMoniker).
+* Added LinkEntities for RetrieveMultiple;
+* Added Sort for RetrieveMultiple;
+* Added Criteria for RetrieveMultiple;
+* Fixed some bugs.
 
 Future plans:
 
-* Updated code to ES2015;
-* Code was restructured to become more readable;
+* Update code to ES2015;
+* Code neeed major refactor to become more readable;
 * Update tests;
 * Update documentation;
 
@@ -34,6 +36,11 @@ Use npm to install the module:
 ```
 > npm install dyn-xrm-api
 ```
+
+## RunKit - Playground - Simple demo
+```
+https://runkit.com/wmkdev/dyn-xrm-api
+``` 
 
 ## API
 
@@ -51,12 +58,11 @@ The module exports a class and its constructor requires a configuration object w
 * `discoveryServiceAddress`: Optional. You should not change this value unless you are sure. default value is "https://dev.crm.dynamics.com/XRMServices/2011/Discovery.svc"
 
 ```
-const dynamics = require("dyn-xrm-api");
-const crmPort = +(process.env.CRM_PORT || 80);
-const _dynamics = new dynamics({ 
+const dynXrmApi = require("dyn-xrm-api");
+const _dynamics = new dynXrmApi({ 
 	domain: process.env.CRM_HOST,
 	hostName: process.env.CRM_HOST,
-	port: crmPort,
+	port: +(process.env.CRM_PORT || 80),
 	organizationName: process.env.CRM_ORGNAME,	
 	timeout: 2 * 60 * 1000, // timeout 2 minutes
 	returnJson: true, // return response in json
@@ -65,27 +71,24 @@ const _dynamics = new dynamics({
 	password: process.env.CRM_PASSWORD,	
 	useHttp: true, // to use http or https/
 });
-
-
 ```
 
 ### Methods
 All public methods has the same signature. The signature has one argument: `options`.
 * `options` must be an object instance containig all parameters for the method.
 
-
 #### RetrieveMultiple(options)
-
 This method should be used to retrieve multiple entities.
 
 **Parameters:**
-* `options`: A required object instance containing authentication's and filters parameters:	
+* `options`: A required object instance containing parameters:	
 	* `EntityName`: String. The name of the entity to create (Lead, Contact, etc. )
 	* `ColumnSet`: Array of strings with the names of the columns to retrieve (empty = *).	
 	* `TopCount`: Limit number of objects to return.	
 	* `Criteria`: Criteria to search on CRM (where clause).	
-	* `Order`: Field to order the search on CRM.		
-
+	* `Order`: Field to order the search on CRM.	
+  * `LinkEntities`: Relation to perform "join" on crm.	
+  
 ```
  const options = {
       EntityName: 'systemuser',
@@ -102,7 +105,7 @@ This method should be used to retrieve multiple entities.
         Conditions: [
           {
             AttributeName: 'modifiedon',
-            Operator: 'GreaterEqual', // 'GreaterEqual', 'GreaterThan','LessEqual','LessThan','Equal','NotEqual'.
+            Operator: 'GreaterEqual', //'GreaterEqual','GreaterThan','LessEqual','LessThan','Equal','NotEqual'.
             Value: dateFilter.toISOString(),
           },
         ],
@@ -135,65 +138,99 @@ This method should be used to retrieve multiple entities.
       },
     };
 
-    const crmEntities = await this._dynamics.RetrieveMultiple(options);
+    const resultCrm = await this._dynamics.RetrieveMultiple(options);
 ```
 
-# ------------------------------
-# Information below is outdated!
-# ------------------------------
-
 #### Create(options)
-
 This method should be used to create new entities such as leads, contacts, etc.
 
 **Parameters:**
-* `options`: A required object instance containing authentication's parameters:
+* `options`: A required object instance containing parameters:	
 	* `LogicalName`: String. The name of the entity to create (Lead, Contact, etc. )
 	* `Attributes`: Array of Key-Value strings .
-	* `FormatedValues`: Array of Key-Value strings.
+	* `RelatedEntities`: Array of FK entities related to the new one.
 
 ```
-	var options = {};
-	options.Attributes = [ { key:'lastname' , value :'Doe'} , { key:'firstname' , value :'John'}];
-	options.LogicalName = 'lead';
-
-	dynamics.Create(options)
-        .then(function (data)) {
-            console.log("Success!");
-        })
-        .catch(function (err) {
-            console.log("Failure...");
-        });
+    const options: any = {
+        LogicalName = 'contact',
+        Attributes = [
+            { key: 'firstname', value: entity.name },
+            { key: 'lastname', value: entity.lastname },
+            { key: 'emailaddress1',value: entity.email },
+        ],
+        RelatedEntities = [
+        {
+          key: 'parentcustomerid',
+          Id: accountCrmId,
+          LogicalName: 'account',
+        },
+      ],
+    };
+    
+    const resultCrm = await this._dynamics.Create(options);
 ``` 
 
 #### Update(options)
-
 This method should be used to update an entity.
 
 **Parameters:**
-* `options`: A required object instance containing authentication's parameters:
+* `options`: A required object instance containing parameters:	
 	* `id`: Entity unique identifier.
 	* `LogicalName`: String. The name of the entity to create (Lead, Contact, etc. )
 	* `Attributes`: Array of Key-Value strings .
-	* `FormatedValues`: Array of Key-Value strings.
+	* `RelatedEntities`: Array of FK entities related to the new one.
 
 ```
-	var options = {};
-	options.id = '00000000-dddd-eeee-iiii-111111111111';	
-	options.Attributes = [ { key:'companyname' , value :'Kidozen'}];
-	options.LogicalName = 'lead';
-
-	dynamics.Update(options) 
-        .then(function (data)) {
-            console.log("Success!");
-        })
-        .catch(function (err) {
-            console.log("Failure...");
-        });
+    const options: any = {
+        id = entityCrmId,
+        LogicalName = 'contact',
+        Attributes = [
+            { key: 'firstname', value: entity.name },
+            { key: 'lastname', value: entity.lastname },
+            { key: 'emailaddress1',value: entity.email },
+        ],
+        RelatedEntities = [
+        {
+          key: 'parentcustomerid',
+          Id: accountCrmId,
+          LogicalName: 'account',
+        },
+      ],
+    };
+    
+    const resultCrm = await this._dynamics.Update(options);
 ``` 
 
-#### Delete(options)
+#### ExecuteSetState(options)
+This method should be used to retrieve multiple entities.
 
+**Parameters:**
+* `options`: A required object instance containing parameters:	
+	* `EntityMoniker`: Object. The Id and LogicalName of the entity to be updated.
+	* `Parameters`: Array. Array of objects to pass to crm.
+	* `RequestName`: String. Name of the request.	  
+
+```
+  const options: any = {
+    RequestName = 'SetState',
+    EntityMoniker = {
+      Id: userId,
+      LogicalName: 'contact',
+    },
+    Parameters = [
+      { key: 'State', value: 0 },
+      { key: 'Status', value: 1 },
+    ],
+  };    
+
+  const resultCrm = await this._dynamics.ExecuteSetState(options);
+```
+
+# ------------------------------
+# Information below is outdated/not tested, sorry!
+# ------------------------------
+
+#### Delete(options)
 This method should be used to delete an entity.
 
 **Parameters:**
@@ -232,31 +269,6 @@ This method should be used to retrieve a single entity.
 	options.ColumnSet = ['firstname'];
 	
 	dynamics.Retrieve(options)
-        .then(function (data)) {
-            console.log("Success!");
-        })
-        .catch(function (err) {
-            console.log("Failure...");
-        });
-``` 
-
-#### RetrieveMultiple(options)
-
-This method should be used to retrieve multiple entities.
-
-**Parameters:**
-* `options`: A required object instance containing authentication's parameters:
-	* `id`: Entity unique identifier.
-	* `EntityName`: String. The name of the entity to create (Lead, Contact, etc. )
-	* `ColumnSet`: Array of strings with the names of the columns to retrieve.	
-
-```
-	var options = {};
-	options.id = '00000000-dddd-eeee-iiii-111111111111';	
-	options.EntityName = 'lead';
-	options.ColumnSet = ['firstname'];
-	
-	dynamics.RetrieveMultiple(options) 
         .then(function (data)) {
             console.log("Success!");
         })
@@ -363,4 +375,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
-
