@@ -106,8 +106,8 @@ var Message = function (util) {
 	this.ExecuteSetState = function (options) {
 		var template = `
 			<s:Body>
-				<Execute xmlns="http://schemas.microsoft.com/xrm/2011/Contracts/Services"  xmlns:b="http://schemas.microsoft.com/xrm/2011/Contracts" xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns:c="http://schemas.datacontract.org/2004/07/System.Collections.Generic">					
-					<request>
+				<Execute xmlns="http://schemas.microsoft.com/xrm/2011/Contracts/Services" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">					
+					<request i:type="b:SetStateRequest" xmlns:a="http://schemas.microsoft.com/xrm/2011/Contracts" xmlns:b="http://schemas.microsoft.com/crm/2011/Contracts">
 						{requetbody}
 					</request>
 				</Execute>

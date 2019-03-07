@@ -363,35 +363,35 @@ var Serializer = function() {
 
       if (options.EntityMoniker) {
         var entityMoniker = 
-          "<b:KeyValuePairOfstringanyType>" + 
+          "<a:KeyValuePairOfstringanyType>" + 
             "<c:key>EntityMoniker</c:key>" +
-            "<c:value i:type='b:EntityReference'>" +
+            "<c:value i:type='a:EntityReference'>" +
               "<a:Id>" + options.EntityMoniker.Id + "</a:Id>" + 
               "<a:LogicalName>" + options.EntityMoniker.LogicalName + "</a:LogicalName>" + 
               "<a:Name i:nil='true' />" +
             "</c:value>" +          
-          "</b:KeyValuePairOfstringanyType>";        
+          "</a:KeyValuePairOfstringanyType>";        
       }
       
       var atts = options.Parameters.map(function(c) {
         return (
-          "<b:KeyValuePairOfstringanyType>" + 
+          "<a:KeyValuePairOfstringanyType>" + 
             "<c:key>" + c.key + "</c:key>" +
-            "<c:value i:type='b:OptionSetValue'>" +            
+            "<c:value i:type='a:OptionSetValue'>" +            
               "<a:Value>" + c.value + "</a:Value>" + 
             "</c:value>" + 
-          "</b:KeyValuePairOfstringanyType>"
+          "</a:KeyValuePairOfstringanyType>"
         );
       });
-      xml += "<b:Parameters>" + entityMoniker + atts.join("") + "</b:Parameters>";
+      xml += "<a:Parameters xmlns:c='http://schemas.datacontract.org/2004/07/System.Collections.Generic'>" + entityMoniker + atts.join("") + "</a:Parameters>";
     }
 
     if (options.RequestId) {
-      xml += "<b:RequestId>" + options.RequestId + "</b:RequestId>";
+      xml += "<a:RequestId>" + options.RequestId + "</a:RequestId>";
     }
 
     if (options.RequestName) {
-      xml = "<b:RequestName>" + options.RequestName + "</b:RequestName>";
+      xml = "<a:RequestName>" + options.RequestName + "</a:RequestName>";
     }    
 
     return xml;
