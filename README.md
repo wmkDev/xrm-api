@@ -39,7 +39,7 @@ Use npm to install the module:
 
 ## RunKit - Playground - Simple demo
 ```
-https://runkit.com/wmkdev/dyn-xrm-api
+https://runkit.com/wmkdev/dyn-xrm-api-sample
 ``` 
 
 ## API
