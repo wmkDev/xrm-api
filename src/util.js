@@ -498,13 +498,17 @@ var Util = function (settings) {
                 //removes 'xx:' prefixes
                 data = deepObjCopy(data_no_ns, prefixes);
                 if (data.Envelope.Body.Fault) {
-                    throw result.Envelope.Body.Fault;
+                    throw data.Envelope.Body.Fault;
                 }
-                const entity = data.Envelope.Body.RetrieveMultipleResponse.RetrieveMultipleResult
-                .Entities.Entity;
-
-                const dataArrJson = parseEntities(entity);
-                cb(null, dataArrJson);                      
+                if (data.Envelope.Body.RetrieveMultipleResponse){
+                    const entity = data.Envelope.Body.RetrieveMultipleResponse.RetrieveMultipleResult
+                    .Entities.Entity;
+    
+                    const dataArrJson = parseEntities(entity);
+                    cb(null, dataArrJson);                      
+                } else {
+                    cb(null, data);                      
+                }                
             });       
         else cb(null, data);
     };

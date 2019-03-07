@@ -361,8 +361,9 @@ var Serializer = function() {
 
     if (options.Parameters) {
 
+      var entityMoniker = '';
       if (options.EntityMoniker) {
-        var entityMoniker = 
+        entityMoniker = 
           "<a:KeyValuePairOfstringanyType>" + 
             "<c:key>EntityMoniker</c:key>" +
             "<c:value i:type='a:EntityReference'>" +
@@ -383,7 +384,9 @@ var Serializer = function() {
           "</a:KeyValuePairOfstringanyType>"
         );
       });
-      xml += "<a:Parameters xmlns:c='http://schemas.datacontract.org/2004/07/System.Collections.Generic'>" + entityMoniker + atts.join("") + "</a:Parameters>";
+      xml += '<a:Parameters xmlns:c="http://schemas.datacontract.org/2004/07/System.Collections.Generic">' 
+                + entityMoniker + atts.join("") + 
+              '</a:Parameters>';
     }
 
     if (options.RequestId) {
@@ -391,7 +394,7 @@ var Serializer = function() {
     }
 
     if (options.RequestName) {
-      xml = "<a:RequestName>" + options.RequestName + "</a:RequestName>";
+      xml += "<a:RequestName>" + options.RequestName + "</a:RequestName>";
     }    
 
     return xml;
