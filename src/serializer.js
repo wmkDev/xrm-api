@@ -42,6 +42,13 @@ var Serializer = function() {
     if (options.Criteria) {
       if (options.Criteria.Conditions) {
         const conditions = options.Criteria.Conditions.map(c => {
+          if (c.Operator === 'Null') {
+            return `\n<b:ConditionExpression>
+                    <b:AttributeName>${c.AttributeName}</b:AttributeName>
+                    <b:Operator>${c.Operator}</b:Operator>
+                    <b:Values xmlns:c="http://schemas.microsoft.com/2003/10/Serialization/Arrays"></b:Values>
+                  </b:ConditionExpression>`;
+          }
           return `\n<b:ConditionExpression>
                        <b:AttributeName>${c.AttributeName}</b:AttributeName>
                        <b:Operator>${c.Operator}</b:Operator>
