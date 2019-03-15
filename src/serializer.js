@@ -280,7 +280,7 @@ var Serializer = function() {
           '</b:KeyValuePairOfstringanyType>'
         );
       });       
-      atts.push(attsRelated);      
+      atts.push(attsRelated.join(""));      
     }
     xml += "<b:Attributes>" + atts.join("") + "</b:Attributes>";
 
