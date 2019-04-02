@@ -15,6 +15,7 @@ This fork was made for personal use to add missing features (customized) and mad
 
 Main differences from original module (xrm-api):
 
+* Added "In" conditional operator to RetrieveMultiple.
 * Fixed param "RelatedEntities" on Create and Update (fk assignment value).
 * New method: ExecuteSetState, used to change state of entity and trigger events on CRM (EntityMoniker).
 * Added LinkEntities for RetrieveMultiple;
@@ -105,7 +106,7 @@ This method should be used to retrieve multiple entities.
         Conditions: [
           {
             AttributeName: 'modifiedon',
-            Operator: 'GreaterEqual', //'GreaterEqual','GreaterThan','LessEqual','LessThan','Equal','NotEqual'.
+            Operator: 'GreaterEqual', //'GreaterEqual','GreaterThan','LessEqual','LessThan','Equal','NotEqual', 'In'.
             Value: dateFilter.toISOString(),
           },
         ],
