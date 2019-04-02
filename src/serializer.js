@@ -50,15 +50,11 @@ var Serializer = function() {
                   </b:ConditionExpression>`;
           }
 
-          let values = `<c:anyType i:type="d:string" xmlns:d="http://www.w3.org/2001/XMLSchema">
-                            ${c.Value}
-                          </c:anyType>`;
+          let values = `<c:anyType i:type="d:string" xmlns:d="http://www.w3.org/2001/XMLSchema">${c.Value}</c:anyType>`;
 
           if (c.Operator === 'In') {
             const multValues = c.Value.split(',').map(c => {
-              return  `<c:anyType i:type="d:string" xmlns:d="http://www.w3.org/2001/XMLSchema">
-                        ${c}
-                      </c:anyType>`;
+              return  `<c:anyType i:type="d:string" xmlns:d="http://www.w3.org/2001/XMLSchema">${c}</c:anyType>`;
             });
             values = multValues.join("");
           }
