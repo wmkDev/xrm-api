@@ -170,10 +170,10 @@ var Serializer = function() {
       xml += "<b:Orders />";
     } else {
       const orderBy = options.Order.Conditions.map(c => {
-        return `<b:Order>
+        return `<b:OrderExpression>
                     <b:AttributeName>${c.AttributeName}</b:AttributeName>
                     <b:OrderType>${c.OrderType}</b:OrderType>
-                  </b:Order>`;
+                  </b:OrderExpression>`;
       });
       xml += `\n<b:Orders>                  
                      ${orderBy.join("")}

@@ -133,7 +133,7 @@ This method should be used to retrieve multiple entities.
         Conditions: [
           {
             AttributeName: 'modifiedon',
-            OrderType: 1, // 0 Asc, 1 Desc
+            OrderType: 'Descending', // Ascending, Descending
           },
         ],
       },
