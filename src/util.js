@@ -496,8 +496,14 @@ var Util = function (settings) {
                     }
                 });
                 //removes 'xx:' prefixes
-                data = deepObjCopy(data_no_ns, prefixes);               
-                if (data.Envelope.Body.RetrieveMultipleResponse){
+                data = deepObjCopy(data_no_ns, prefixes);
+                if (!data.Envelope || !data.Envelope.Body){                    
+                    cb(null, {
+                        err: true,
+                        jsondata,
+                        data,
+                    });
+                }else if (data.Envelope.Body.RetrieveMultipleResponse){
                     const entity = data.Envelope.Body.RetrieveMultipleResponse.RetrieveMultipleResult
                     .Entities.Entity;
     
