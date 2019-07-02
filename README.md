@@ -1,3 +1,5 @@
+[![npm](https://nodei.co/npm/dyn-xrm-api.png)](https://www.npmjs.com/package/dyn-xrm-api)
+
 # MS Dynamics CRM client for Nodejs
 This node module provides a set of methods to interact with MS Dynamics CRM Online services.
 This is a pure SOAP proxy that supports LiveId authentication.
